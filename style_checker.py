@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Checks .md files for Elastic style guide violations and writes style_report.md."""
+"""Checks .md files for Elastic style guide violations and writes style_report.md.
+
+Usage:
+  python3 style_checker.py              # full repo scan → style_report.md
+  python3 style_checker.py path/to/file.md  # single-file check → stdout
+"""
 
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -209,7 +215,35 @@ def build_report(results: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def check_single_file_stdout(path: Path) -> int:
+    """Check one file and print violations to stdout. Returns violation count."""
+    if not path.exists():
+        print(f"error: file not found: {path}", file=sys.stderr)
+        sys.exit(2)
+    if not path.suffix == ".md":
+        print(f"error: not a .md file: {path}", file=sys.stderr)
+        sys.exit(2)
+
+    violations = check_file(path)
+    if not violations:
+        print(f"OK  {path}  (no violations)")
+        return 0
+
+    rel = path.relative_to(REPO_ROOT) if path.is_absolute() else path
+    print(f"{rel}: {len(violations)} violation(s)")
+    for rule_id, _desc, lineno, matched, fix in sorted(violations, key=lambda x: x[2]):
+        print(f"  Line {lineno:4d}  [{rule_id}]  '{matched}'  →  {fix}")
+    return len(violations)
+
+
 def main():
+    if len(sys.argv) > 1:
+        target = Path(sys.argv[1])
+        if not target.is_absolute():
+            target = Path.cwd() / target
+        count = check_single_file_stdout(target)
+        sys.exit(1 if count else 0)
+
     print("Scanning for style violations…")
     results = scan_repo()
 
