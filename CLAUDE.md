@@ -340,6 +340,8 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
 
 ## Available tasks
 - `tasks/parallel-doc-review.md` — parallel doc audit using all three tools. Run before major releases or on demand.
+- `tasks/breaking-change-detector.md` — classify breaking changes 
+  from a diff and draft release note entries
 
 ## Team roles and workflows
 
