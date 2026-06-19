@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '**/*.md'        # only fire when .md files change
+  workflow_dispatch:
 
 jobs:
   doc-review:
