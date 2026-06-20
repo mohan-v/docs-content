@@ -55,6 +55,8 @@ toc:
       - file: elasticsearch/start-ilm.md
       - file: elasticsearch/index-lifecycle-management-errors.md
       - file: elasticsearch/file-based-recovery.md
+      - file: elasticsearch/troubleshooting-upgrades.md
+      - file: elasticsearch/troubleshooting-upgrade-assistant.md
       - file: elasticsearch/security.md
         children:
           - file: elasticsearch/security/security-trb-settings.md
@@ -133,6 +135,7 @@ toc:
       - file: observability/troubleshooting-infrastructure-monitoring.md
         children:
           - file: observability/troubleshooting-infrastructure-monitoring/understanding-no-results-found-message.md
+          - file: observability/troubleshooting-infrastructure-monitoring/kubernetes-pods-docker-containers-empty-otel.md
       - file: observability/troubleshoot-service-level-objectives-slos.md
   - file: security.md
     children:
