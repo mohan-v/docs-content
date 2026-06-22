@@ -346,6 +346,10 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
   PR description from the current git diff
 - `tasks/consistency-checker.md` — find terminology and version 
   inconsistencies for a named feature across the repo
+- `tasks/jira-pipeline-manual-pr.md` — JIRA → edit → style check → 
+  PR description → stops for writer review before committing
+- `tasks/jira-pipeline-auto-pr.md` — JIRA → edit → style check → 
+  commit → open PR automatically (use for simple, contained fixes only)
 
 ## Team roles and workflows
 
