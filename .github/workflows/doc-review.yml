@@ -29,14 +29,14 @@ jobs:
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
 
-      - name: Run parallel doc review
+      - name: Run PR doc review
         id: doc_review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           claude --dangerously-skip-permissions \
                  --print \
-                 "run tasks/parallel-doc-review.md" | tee review_output.txt
+                 "run tasks/pr-doc-review.md" | tee review_output.txt
 
       - name: Post review as PR comment
         if: github.event_name == 'pull_request'
