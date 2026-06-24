@@ -1,0 +1,53 @@
+name: Scheduled Documentation Audit
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 9am UTC
+  workflow_dispatch:       # Also allow manual triggering
+
+jobs:
+  scheduled-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write        # needed to create GitHub Issues
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt || true
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run full repo audit
+        id: full_audit
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude --dangerously-skip-permissions \
+                 --print \
+                 "run tasks/parallel-doc-review.md" | tee audit_output.txt
+
+      - name: Create GitHub Issue with findings
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('audit_output.txt', 'utf8');
+            const date = new Date().toISOString().split('T')[0];
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📋 Weekly Documentation Audit — ${date}`,
+              body: `## Automated Documentation Health Report\n\n${output}`,
+              labels: ['documentation', 'automated-audit']
+            });
