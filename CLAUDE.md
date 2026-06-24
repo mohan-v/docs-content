@@ -350,6 +350,8 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
   PR description → stops for writer review before committing
 - `tasks/jira-pipeline-auto-pr.md` — JIRA → edit → style check → 
   commit → open PR automatically (use for simple, contained fixes only)
+- `tasks/pr-doc-review.md` — scoped doc review for PR changed files only. 
+  Used automatically by GitHub Actions on every PR.
 
 ## Team roles and workflows
 
