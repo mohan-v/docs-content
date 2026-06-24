@@ -24,6 +24,14 @@ Breaking changes can impact your Elastic applications, potentially disrupting no
 
 ## 9.4.0 [elastic-security-940-breaking-changes]
 
+::::{dropdown} Security: alert_threshold parameter renamed to detection_threshold
+The `alert_threshold` parameter has been renamed to `detection_threshold` in the detection engine API.
+
+**Impact**<br> Any scripts or automations using `alert_threshold` will fail.
+
+**Action**<br> Update your API calls to use `detection_threshold` instead of `alert_threshold`.
+::::
+
 ::::{dropdown} Entity Analytics: Risk scores reset after upgrading to 9.4
 Risk scoring is moving from name-based to ID-based scoring tied to the entity store. Historical name-based risk scores are not migrated to the new model.
 
