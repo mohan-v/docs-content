@@ -1,0 +1,74 @@
+name: Cross-Repo Consistency Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      feature:
+        description: 'Feature name to check (e.g. ELSER, semantic_reranker)'
+        required: true
+        default: 'ELSER'
+  schedule:
+    - cron: '0 9 * * 3'  # Every Wednesday at 9am UTC
+
+jobs:
+  consistency-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout docs-content
+        uses: actions/checkout@v4
+        with:
+          path: docs-content
+
+      - name: Clone elasticsearch repo
+        run: |
+          git clone --depth 1 \
+            https://github.com/elastic/elasticsearch.git \
+            elasticsearch
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          cd docs-content
+          pip install -r requirements.txt || true
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run cross-repo consistency check
+        id: consistency_check
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd docs-content
+          FEATURE="${{ github.event.inputs.feature || 'ELSER' }}"
+          claude --dangerously-skip-permissions \
+                 --print \
+                 "I'm working on the docs-content repo today.
+                  Run tasks/consistency-checker.md for the feature '${FEATURE}'.
+                  Also check ../elasticsearch/docs/ for references.
+                  Use the repo conventions in CLAUDE.md throughout." \
+                 | tee consistency_output.txt
+
+      - name: Create GitHub Issue with findings
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('docs-content/consistency_output.txt', 'utf8');
+            const feature = '${{ github.event.inputs.feature || 'ELSER' }}';
+            const date = new Date().toISOString().split('T')[0];
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔍 Cross-Repo Consistency: ${feature} — ${date}`,
+              body: `## Cross-Repo Consistency Report\n\n**Feature:** ${feature}\n**Repos checked:** docs-content, elasticsearch\n\n${output}`,
+              labels: ['documentation', 'automated-audit']
+            });
