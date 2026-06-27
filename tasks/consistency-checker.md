@@ -43,3 +43,29 @@ Format:
 - Terminology variations are medium priority (user confusion)
 - Cross-repo link issues may be false positives — flag but don't
   assume broken
+
+## Cross-repo checking (when additional repos are available locally)
+
+If other Elastic repos are cloned under ~/repos/, extend the search:
+
+### Additional repos to check
+- ~/repos/elasticsearch/docs/ — Elasticsearch reference docs
+- ~/repos/kibana/docs/ — Kibana docs (if cloned)
+
+### Step 1 (extended) — Find all references across repos
+Search each available repo for the feature name:
+```bash
+grep -r "<feature>" ~/repos/docs-content/ --include="*.md" -l
+grep -r "<feature>" ~/repos/elasticsearch/docs/ --include="*.md" -l
+```
+
+### Step 2 (extended) — Compare across repos
+For each file found in both repos, compare:
+- Model IDs and parameter names — must match exactly
+- Version numbers — should be consistent
+- Terminology — same feature name spelling and capitalization
+- Descriptions — should not contradict each other
+
+### Step 3 (extended) — Flag cross-repo conflicts
+Report any inconsistency where docs-content and elasticsearch 
+describe the same thing differently.
