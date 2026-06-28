@@ -352,6 +352,10 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
   commit → open PR automatically (use for simple, contained fixes only)
 - `tasks/pr-doc-review.md` — scoped doc review for PR changed files only. 
   Used automatically by GitHub Actions on every PR.
+- `tasks/editorial-review.md` — AI-powered editorial review for 
+  completeness, audience fit, template compliance, and clarity. 
+  Use when inheriting or rewriting existing content.
+
 
 ## Team roles and workflows
 
