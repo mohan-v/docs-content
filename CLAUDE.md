@@ -355,6 +355,9 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
 - `tasks/editorial-review.md` — AI-powered editorial review for 
   completeness, audience fit, template compliance, and clarity. 
   Use when inheriting or rewriting existing content.
+- `tasks/confluence-to-pr.md` — Confluence spec → JIRA ticket → 
+  doc edit → PR. Creates JIRA ticket always, then proceeds if 
+  simple or hands off to draft-and-review.md if complex.
 
 
 ## Team roles and workflows
