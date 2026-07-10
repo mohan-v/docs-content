@@ -1,0 +1,27 @@
+diff --git a/rest-api-spec/search.json b/rest-api-spec/search.json
+--- a/rest-api-spec/search.json
++++ b/rest-api-spec/search.json
+@@ -1,8 +1,8 @@
+  {
+-   "default_operator": "OR",
++   "default_operator": "AND",
+    "max_results": 100,
+-   "timeout": 30,
++   "request_timeout_ms": 30000,
+    "track_total_hits": true,
+-   "type": "string",
++   "type": "keyword"
+  }
+
+@@ -15,10 +15,12 @@
+- "endpoint": "/api/search",
++ "endpoint": "/api/v2/search",
+  "methods": ["GET", "POST"],
++ "deprecated_methods": ["DELETE"],
++ "requires_auth": true,
+  "response": {
+-   "format": "json",
++   "format": "json",
++   "pagination": "cursor",
+-   "pagination": "offset"
+  }
