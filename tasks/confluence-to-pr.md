@@ -54,10 +54,19 @@ Share the ticket URL with the writer before proceeding.
 
 ### Stage 4 — Make the documentation change
 Using the JIRA ticket as the source of truth:
-1. Find the correct file in the repo
-2. Make the documented change
-3. Run style_checker.py on the changed file
-4. Fix any violations
+1. Create a working branch:
+   - `git checkout main`
+   - `git pull origin main`
+   - Derive a branch name: `<ticket-id-lowercase>-<slug>`, where
+     `<slug>` is a short kebab-case version of the one-line change
+     summary
+   - `git checkout -b <branch-name>`
+   - If the branch already exists locally or on the remote, stop and
+     report it — do not force-overwrite an existing branch
+2. Find the correct file in the repo
+3. Make the documented change
+4. Run style_checker.py on the changed file
+5. Fix any violations
 
 ### Stage 5 — Open a PR
 1. Commit the change:
@@ -72,6 +81,8 @@ Using the JIRA ticket as the source of truth:
 5. Share the PR URL
 
 ## Notes
+- Stage 4 always creates a fresh branch off main — never commits
+  directly to main or reuses a leftover branch from a prior run
 - Always share the JIRA ticket URL after Stage 3 before continuing
 - The JIRA ticket is the audit trail — it connects the Confluence
   spec to the PR
