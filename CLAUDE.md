@@ -358,7 +358,7 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
 - `tasks/confluence-to-pr.md` — Confluence spec → JIRA ticket → 
   doc edit → PR. Creates JIRA ticket always, then proceeds if 
   simple or hands off to draft-and-review.md if complex.
-
+- `tasks/gap-detector.md` — analyze a PR diff for documentation gaps and create JIRA tickets automatically
 
 ## Team roles and workflows
 
