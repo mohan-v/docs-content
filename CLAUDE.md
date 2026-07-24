@@ -360,6 +360,11 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
   simple or hands off to draft-and-review.md if complex.
 - `tasks/gap-detector.md` — analyze a PR diff for documentation gaps and create JIRA tickets automatically
 
+## Available agents
+- `.claude/agents/docs-reviewer.md` — read-only editorial review agent.
+  Checks completeness, audience fit, template compliance, and clarity.
+  Spawned automatically or invoke with "use the docs-reviewer agent".
+
 ## Team roles and workflows
 
 ### Writer workflow
