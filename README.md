@@ -29,10 +29,14 @@ Scans every `.md` file in the repo and flags structural issues that are easy to 
 **Run it:**
 
 ```sh
+# Full repo scan
 python3 doc_audit.py
+
+# Scope to specific files
+python3 doc_audit.py path/to/file.md path/to/other-file.md
 ```
 
-Takes about 10–20 seconds. Writes a report to `audit_report.md`.
+Full scan takes about 10–20 seconds. Writes a report to `audit_report.md`, with a `Scope:` line at the top stating whether it covered the full repo or a specific list of files. When scoped to specific files, the two directory-level checks (mixed `.md`/`.adoc`, empty folders) are skipped since they aren't meaningful for an arbitrary file list.
 
 **What it checks:**
 
@@ -64,10 +68,14 @@ Scans every `.md` file for links to other files in this repo, and reports any th
 **Run it:**
 
 ```sh
+# Full repo scan
 python3 link_checker.py
+
+# Scope to specific files
+python3 link_checker.py path/to/file.md path/to/other-file.md
 ```
 
-Takes about 30–60 seconds. Writes a report to `link_report.md`.
+Full scan takes about 30–60 seconds. Writes a report to `link_report.md`, with a `Scope:` line at the top stating whether it covered the full repo or a specific list of files.
 
 **What it checks:**
 
@@ -104,14 +112,14 @@ Checks `.md` files against a subset of Elastic's style rules. The same rules run
 **Run it (two modes):**
 
 ```sh
-# Check a single file — prints results to the terminal
-python3 style_checker.py path/to/your/file.md
+# Check one or more specific files — prints results to the terminal
+python3 style_checker.py path/to/your/file.md [another/file.md ...]
 
 # Check the whole repo — writes a report to style_report.md
 python3 style_checker.py
 ```
 
-The single-file mode exits with code 1 if violations are found, 0 if clean — useful for scripting or editor integrations.
+The file-scoped mode prints a `Scope:` line naming the file(s) checked, then exits with code 1 if violations are found, 0 if clean — useful for scripting or editor integrations. The full-repo report also states `Scope: full repo` at the top.
 
 **Rules it enforces:**
 

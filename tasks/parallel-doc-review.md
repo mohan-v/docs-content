@@ -41,5 +41,6 @@ Once all three subagents complete, produce a report with:
 
 ## Notes
 - Tools are run from repo root with no file arguments (full repo scan)
-- style_checker.py accepts an optional file argument for targeted runs
+- All three scripts accept zero or more optional file path arguments for
+  targeted runs, for example `python3 style_checker.py path/to/file.md`
 - False positives in link_checker.py are common in NLP example files

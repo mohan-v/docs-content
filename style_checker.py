@@ -2,10 +2,13 @@
 """Checks .md files for Elastic style guide violations and writes style_report.md.
 
 Usage:
-  python3 style_checker.py              # full repo scan → style_report.md
-  python3 style_checker.py path/to/file.md  # single-file check → stdout
+  python3 style_checker.py                        # full repo scan → style_report.md
+  python3 style_checker.py path/to/file.md [...]   # one or more files → stdout
 """
 
+from __future__ import annotations
+
+import argparse
 import os
 import re
 import sys
@@ -178,7 +181,7 @@ def scan_repo():
 RULE_DESCRIPTIONS = {r[0]: r[1] for r in RULES}
 
 
-def build_report(results: dict) -> str:
+def build_report(results: dict, scope: str) -> str:
     total = sum(len(v) for v in results.values())
 
     # Count per rule
@@ -188,6 +191,7 @@ def build_report(results: dict) -> str:
             rule_counts[v[0]] += 1
 
     lines = ["# Style Check Report\n"]
+    lines.append(f"**{scope}**\n")
 
     lines.append("## Summary\n")
     lines.append(f"- Files with violations: **{len(results)}**")
@@ -236,22 +240,69 @@ def check_single_file_stdout(path: Path) -> int:
     return len(violations)
 
 
+def _validate_targets(paths: list[Path]) -> None:
+    """Validate every path exists and is a .md file before any work starts."""
+    errors = []
+    for p in paths:
+        if not p.exists():
+            errors.append(f"not found: {p}")
+        elif p.suffix != ".md":
+            errors.append(f"not a .md file: {p}")
+    if errors:
+        print("error: invalid file argument(s):", file=sys.stderr)
+        for e in errors:
+            print(f"  {e}", file=sys.stderr)
+        sys.exit(2)
+
+
+def _scope_line(targets: list[Path] | None) -> str:
+    """Build a human-readable 'Scope: ...' line describing what was checked."""
+    if not targets:
+        return "Scope: full repo"
+    rels = []
+    for t in targets:
+        try:
+            rels.append(str(t.relative_to(REPO_ROOT)))
+        except ValueError:
+            rels.append(str(t))
+    n = len(rels)
+    return f"Scope: {n} file{'s' if n != 1 else ''} (" + ", ".join(rels) + ")"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Checks .md files for Elastic style guide violations."
+    )
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=Path,
+        help="Specific .md file(s) to check. If omitted, scans the full repo.",
+    )
+    return parser.parse_args()
+
+
 def main():
-    if len(sys.argv) > 1:
-        target = Path(sys.argv[1])
-        if not target.is_absolute():
-            target = Path.cwd() / target
-        count = check_single_file_stdout(target)
-        sys.exit(1 if count else 0)
+    args = parse_args()
+
+    if args.files:
+        targets = [f if f.is_absolute() else Path.cwd() / f for f in args.files]
+        _validate_targets(targets)
+        print(_scope_line(targets))
+        total = 0
+        for target in targets:
+            total += check_single_file_stdout(target)
+        sys.exit(1 if total else 0)
 
     print("Scanning for style violations…")
+    print(_scope_line(None))
     results = scan_repo()
 
     total = sum(len(v) for v in results.values())
     print(f"  Files with violations: {len(results)}")
     print(f"  Total violations:      {total}")
 
-    report = build_report(results)
+    report = build_report(results, _scope_line(None))
     out = REPO_ROOT / "style_report.md"
     out.write_text(report, encoding="utf-8")
     print(f"\nReport written to {out}")

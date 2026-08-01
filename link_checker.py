@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
-"""Scans all .md files for broken internal links and writes link_report.md."""
+"""Scans .md files for broken internal links and writes link_report.md.
 
+Usage:
+  python3 link_checker.py                        # full repo scan → link_report.md
+  python3 link_checker.py path/to/file.md [...]   # scan only the given file(s)
+"""
+
+from __future__ import annotations
+
+import argparse
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -14,10 +23,13 @@ SKIP_DIRS = {".git", "node_modules", "__pycache__", ".claude", ".venv", "raw-mig
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 
 
-def iter_md_files():
-    for root, dirs, files in os.walk(REPO_ROOT):
+def iter_md_files(files=None):
+    if files is not None:
+        yield from (f for f in files if f.suffix == ".md")
+        return
+    for root, dirs, filenames in os.walk(REPO_ROOT):
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
-        for fname in files:
+        for fname in filenames:
             if fname.endswith(".md"):
                 yield Path(root) / fname
 
@@ -76,11 +88,11 @@ def classify(target: str, source_file: Path):
     return resolved, None
 
 
-def check_links():
+def check_links(files=None):
     """Returns {source_file: [(raw_target, resolved_path), ...]}."""
     broken = defaultdict(list)
 
-    for md_file in iter_md_files():
+    for md_file in iter_md_files(files):
         try:
             text = md_file.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -97,9 +109,10 @@ def check_links():
     return broken
 
 
-def build_report(broken: dict) -> str:
+def build_report(broken: dict, scope: str) -> str:
     total = sum(len(v) for v in broken.values())
     lines = ["# Internal Link Check Report\n"]
+    lines.append(f"**{scope}**\n")
 
     lines.append("## Summary\n")
     lines.append(f"- Files with broken links: **{len(broken)}**")
@@ -128,15 +141,65 @@ def build_report(broken: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _validate_files(paths: list[Path]) -> None:
+    """Validate every path exists and is a .md file before any work starts."""
+    errors = []
+    for p in paths:
+        if not p.exists():
+            errors.append(f"not found: {p}")
+        elif p.suffix != ".md":
+            errors.append(f"not a .md file: {p}")
+    if errors:
+        print("error: invalid file argument(s):", file=sys.stderr)
+        for e in errors:
+            print(f"  {e}", file=sys.stderr)
+        sys.exit(2)
+
+
+def _scope_line(files: list[Path] | None) -> str:
+    """Build a human-readable 'Scope: ...' line describing what was scanned."""
+    if not files:
+        return "Scope: full repo"
+    rels = []
+    for f in files:
+        try:
+            rels.append(str(f.relative_to(REPO_ROOT)))
+        except ValueError:
+            rels.append(str(f))
+    n = len(rels)
+    return f"Scope: {n} file{'s' if n != 1 else ''} (" + ", ".join(rels) + ")"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Scans .md files for broken internal links."
+    )
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=Path,
+        help="Specific .md file(s) to scan. If omitted, scans the full repo.",
+    )
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
+    files = None
+    if args.files:
+        files = [f if f.is_absolute() else Path.cwd() / f for f in args.files]
+        _validate_files(files)
+
+    scope = _scope_line(files)
     print("Scanning for broken internal links…")
-    broken = check_links()
+    print(scope)
+    broken = check_links(files)
 
     total = sum(len(v) for v in broken.values())
     print(f"  Files with broken links: {len(broken)}")
     print(f"  Total broken links:      {total}")
 
-    report = build_report(broken)
+    report = build_report(broken, scope)
     out = REPO_ROOT / "link_report.md"
     out.write_text(report, encoding="utf-8")
     print(f"\nReport written to {out}")
