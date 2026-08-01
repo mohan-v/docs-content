@@ -1,0 +1,4 @@
+.venv/
+chroma_rag_demo/
+chroma_elastic_*/
+.ipynb_checkpoints/
