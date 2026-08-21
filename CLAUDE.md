@@ -346,18 +346,21 @@ The `learning-rag/` directory contains experimental Jupyter notebooks for RAG pi
   PR description from the current git diff
 - `tasks/consistency-checker.md` — find terminology and version 
   inconsistencies for a named feature across the repo
-- `tasks/jira-pipeline-manual-pr.md` — JIRA → edit → style check → 
-  PR description → stops for writer review before committing
-- `tasks/jira-pipeline-auto-pr.md` — JIRA → edit → style check → 
-  commit → open PR automatically (use for simple, contained fixes only)
+- `tasks/jira-pipeline-manual-pr.md` — branch from nvanmane-1 → JIRA → 
+  edit → style check → PR description → stops for writer review 
+  before committing
+- `tasks/jira-pipeline-auto-pr.md` — branch from nvanmane-1 → JIRA → 
+  edit → style check → commit → open PR against nvanmane-1 
+  automatically (use for simple, contained fixes only)
 - `tasks/pr-doc-review.md` — scoped doc review for PR changed files only. 
   Used automatically by GitHub Actions on every PR.
 - `tasks/editorial-review.md` — AI-powered editorial review for 
   completeness, audience fit, template compliance, and clarity. 
   Use when inheriting or rewriting existing content.
 - `tasks/confluence-to-pr.md` — Confluence spec → JIRA ticket → 
-  doc edit → PR. Creates JIRA ticket always, then proceeds if 
-  simple or hands off to draft-and-review.md if complex.
+  branch from nvanmane-1 → doc edit → PR against nvanmane-1. Creates 
+  JIRA ticket always, then proceeds if simple or hands off to 
+  draft-and-review.md if complex.
 - `tasks/gap-detector.md` — analyze a PR diff for documentation gaps and create JIRA tickets automatically
 
 ## Available agents

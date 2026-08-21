@@ -2,7 +2,7 @@ name: Automated Doc Review
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, nvanmane-1]
     paths:
       - '**/*.md'        # only fire when .md files change
   workflow_dispatch:

@@ -55,14 +55,12 @@ Share the ticket URL with the writer before proceeding.
 ### Stage 4 — Make the documentation change
 Using the JIRA ticket as the source of truth:
 1. Create a working branch:
-   - `git checkout main`
-   - `git pull origin main`
-   - Derive a branch name: `<ticket-id-lowercase>-<slug>`, where
-     `<slug>` is a short kebab-case version of the one-line change
-     summary
-   - `git checkout -b <branch-name>`
-   - If the branch already exists locally or on the remote, stop and
-     report it — do not force-overwrite an existing branch
+   - `git checkout nvanmane-1`
+   - `git pull origin nvanmane-1`
+   - `git checkout -b docs/<TICKET-ID>`
+   - If a branch named `docs/<TICKET-ID>` already exists locally or on
+     the remote, stop and report the conflict — do not force-overwrite
+     or reuse it
 2. Find the correct file in the repo
 3. Make the documented change
 4. Run style_checker.py on the changed file
@@ -76,15 +74,18 @@ Using the JIRA ticket as the source of truth:
    git push origin HEAD
 3. Generate PR description using tasks/pr-description-generator.md
 4. Open PR:
-   gh pr create --base main --title "docs: <summary> per <TICKET-ID>"
+   gh pr create --base nvanmane-1 --title "docs: <summary> per <TICKET-ID>"
    --body "<pr-description>"
 5. Share the PR URL
 
 ## Notes
-- Stage 4 always creates a fresh branch off main — never commits
-  directly to main or reuses a leftover branch from a prior run
+- Stage 4 always creates a fresh branch off nvanmane-1, named
+  docs/<TICKET-ID> — never commits directly to nvanmane-1 or reuses
+  a leftover branch from a prior run
 - Always share the JIRA ticket URL after Stage 3 before continuing
 - The JIRA ticket is the audit trail — it connects the Confluence
   spec to the PR
+- Branches are created from nvanmane-1, and PRs target nvanmane-1 —
+  not main
 - If the Confluence spec is ambiguous, stop at Stage 2 and ask
   for clarification

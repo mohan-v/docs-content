@@ -6,7 +6,7 @@ Generate a complete, reviewer-ready PR description from the current git diff. Sa
 ## Instructions for Claude Code
 
 ### Step 1 — Analyze the diff
-Run: git diff main...HEAD
+Run: git diff nvanmane-1...HEAD
 Identify:
 - Which files changed
 - What type of change each file represents (new content, edit,
