@@ -18,7 +18,11 @@ rather than a full repo audit.
 ## Instructions for Claude Code
 
 ### Step 1 — Get changed files
-Run: git diff --name-only origin/main...HEAD -- '*.md'
+Run: git diff --name-only origin/${GITHUB_BASE_REF:-main}...HEAD -- '*.md'
+
+`GITHUB_BASE_REF` is set by GitHub Actions to the PR's actual target
+branch (main, nvanmane-1, or any future branch). Falls back to main
+when run outside a PR context (e.g. locally), where it's unset.
 
 If that returns nothing (e.g. on a fresh branch), fall back to:
 git diff --name-only HEAD~1 -- '*.md'
