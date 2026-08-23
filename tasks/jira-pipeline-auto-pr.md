@@ -38,7 +38,14 @@ Given a JIRA ticket ID:
 8. Push to current branch:
    `git push origin HEAD`
 9. Open a PR using gh CLI:
-   `gh pr create --base nvanmane-1 --title "docs: <summary> per <TICKET-ID>" --body "<pr-description>"`
+   - Working branches live on the `origin` fork (not the `elastic/docs-content`
+     upstream), and `nvanmane-1` only exists on that fork. `gh pr create` and
+     `gh repo view` both default to the upstream parent repo for a fork, which
+     causes "No commits between elastic:nvanmane-1 and ..." errors — so
+     `--repo` must be passed explicitly, derived from the `origin` remote URL
+     (not from `gh repo view`):
+     `REPO=$(git remote get-url origin | sed -E 's#.*[:/]([^/]+/[^/]+)\.git#\1#')`
+     `gh pr create --repo "$REPO" --base nvanmane-1 --head docs/<TICKET-ID> --title "docs: <summary> per <TICKET-ID>" --body "<pr-description>"`
 10. Share the PR URL with the writer
 
 ## Notes
