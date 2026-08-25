@@ -147,6 +147,7 @@ To check for security updates, go to [Security announcements for the Elastic sta
 * Improves {{elastic-defend}} behavioral protection performance by unloading rules that are fully covered by simple exception or trust entries, preventing CPU usage from evaluating events against those rules.
 * Further reduces {{elastic-defend}} behavioral protection CPU usage for trusted applications.
 * Adds ransomware protection to {{elastic-defend}} on macOS. Turned off by default; turn on using the `mac.ransomware.mode` advanced policy setting.
+* Adds a `quick_export` toolbar option to dashboards, allowing you to export the current view as a PDF without opening the export menu [#999999]({{kib-pull}}999999).
 
 
 
