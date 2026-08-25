@@ -12,6 +12,9 @@ applies_to:
 
 # Solutions overview [introduction]
 
+Elastic now supports a `quick_export` toolbar option that exports the current dashboard view as a PDF without opening the export menu. Available in Kibana 9.4 and later.
+
+
 Elastic offers three major search-powered solutions: {{es}}, Elastic {{observability}}, and {{elastic-sec}}—all built on an open source, extensible [platform](/get-started/the-stack.md).
 Whether you're building a search experience, monitoring your infrastructure, or securing your environment, there is a solution that is right for your business needs needs.
 
