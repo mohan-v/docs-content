@@ -26,7 +26,13 @@ and open a PR with that change.
 Given a PR number:
 
 1. Fetch the diff:
-   `gh pr diff <PR-NUMBER>`
+   - `gh` defaults to the upstream parent repo on a fork, not the fork
+     itself — if a PR with the same number exists in both
+     `elastic/docs-content` and the fork, this silently fetches the
+     wrong PR. Derive `--repo` explicitly from the `origin` remote
+     (same pattern as Step 8):
+     `REPO=$(git remote get-url origin | sed -E 's#.*[:/]([^/]+/[^/]+)\.git#\1#')`
+     `gh pr diff <PR-NUMBER> --repo "$REPO"`
 2. Analyze the diff: what changed, what product/feature area, what
    type of change (feature/enhancement/deprecation/breaking/fix),
    and what version this targets.
