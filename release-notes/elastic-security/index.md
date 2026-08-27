@@ -36,6 +36,7 @@ To check for security updates, go to [Security announcements for the Elastic sta
 * Adds a warning callout to the **Endpoint exceptions**, **Trusted applications**, and **Event filters** forms when users enter unnecessarily escaped characters [#268477]({{kib-pull}}268477).
 * Adds a warning callout and confirmation modal to the rule exceptions form when entering escaped characters (such as `\*` or `\?`) with the `matches` operator, indicating they might have intended wildcards instead [#268397]({{kib-pull}}268397).
 * Updates the {{agent-builder}} announcement modal so that clicking **Revert** immediately switches all space users back to AI Assistant [#267906]({{kib-pull}}267906).
+* Adds a `quick_export` toolbar option to dashboards, allowing you to export the current dashboard view as a PDF without opening the export menu [#999999]({{kib-pull}}999999).
 
 ### Fixes [elastic-security-9.4.2-fixes]
 
