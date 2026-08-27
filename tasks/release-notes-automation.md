@@ -50,6 +50,19 @@ Given a PR number:
    using the file's existing substitution variable convention, and
    the correct section — e.g. "Features and enhancements" vs.
    "Breaking changes" vs. "Deprecations").
+   - The PR link (e.g. `{{kib-pull}}` or the equivalent substitution
+     for the relevant product repo) must reference the
+     Kibana/engineering PR that made the underlying change — a
+     different PR, in a different repo, from this docs-content PR.
+     It must NEVER default to, reuse, or assume the docs-content PR
+     number. Find the actual engineering PR number only if it
+     appears explicitly in the docs-content PR's diff or description
+     (e.g. a linked PR, commit message, or issue reference). If it
+     is not present anywhere in the diff or description, STOP and
+     ask the writer for the correct engineering PR number — do not
+     proceed with any number, including the docs-content PR's own
+     number, without the writer's explicit confirmation that it's
+     correct.
 5. Create a working branch from nvanmane-1:
    - `git checkout nvanmane-1`
    - `git pull origin nvanmane-1`
