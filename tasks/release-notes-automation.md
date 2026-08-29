@@ -72,7 +72,11 @@ Given a PR number:
      do not force-overwrite or reuse it
 6. Insert the drafted entry into the correct file/section
 7. Run `python3 style_checker.py <changed-file>`
-   - If violations found, fix them and re-run until clean
+   - Only fix violations on the newly inserted line(s) from this task.
+     Pre-existing violations elsewhere in the file are out of scope —
+     report them in the summary to the writer, but do not modify them,
+     even though `style_checker.py` will flag the whole file.
+   - Re-run until the newly inserted line(s) are clean.
 8. Commit, push, and open a PR:
    - `git add <changed-file>`
    - `git commit -m "docs: add release note for PR #<PR-NUMBER>"`
