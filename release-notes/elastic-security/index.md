@@ -33,6 +33,7 @@ To check for security updates, go to [Security announcements for the Elastic sta
 ### Features and enhancements [elastic-security-9.4.2-features-enhancements]
 
 * Improves Automatic Migration dashboard migration accuracy by sampling index records before query translation, enabling the LLM to generate {{esql}} queries with correct field names and values from the first attempt [#261927]({{kib-pull}}261927).
+* Adds a `quick_export` option to the dashboard toolbar that exports the current view as a PDF without opening the export menu [#271204]({{kib-pull}}271204).
 * Adds a warning callout to the **Endpoint exceptions**, **Trusted applications**, and **Event filters** forms when users enter unnecessarily escaped characters [#268477]({{kib-pull}}268477).
 * Adds a warning callout and confirmation modal to the rule exceptions form when entering escaped characters (such as `\*` or `\?`) with the `matches` operator, indicating they might have intended wildcards instead [#268397]({{kib-pull}}268397).
 * Updates the {{agent-builder}} announcement modal so that clicking **Revert** immediately switches all space users back to AI Assistant [#267906]({{kib-pull}}267906).
